@@ -8,8 +8,8 @@ POSTS_PER_PAGE: int = 10
 
 
 def index(request):
-    title = 'Последние обновления на сайте'
-    posts = Post.objects.order_by('-pub_date')[:POSTS_PER_PAGE]
+    title = ''
+    posts = Post.objects.all()[:POSTS_PER_PAGE]
     # В словаре context отправляем информацию в шаблон
     context = {
         'posts': posts,
@@ -27,9 +27,8 @@ def group_posts(request, slug):
     # Метод .filter позволяет ограничить поиск по критериям.
     # Это аналог добавления
     # условия WHERE group_id = {group_id}
-    title = 'Записи сообщества ' + group.title
-    posts = Post.objects.filter(group=group).order_by(
-        '-pub_date')[:POSTS_PER_PAGE]
+    title = ''
+    posts = Post.objects.filter(group=group)[:POSTS_PER_PAGE]
     context = {
         'group': group,
         'posts': posts,
