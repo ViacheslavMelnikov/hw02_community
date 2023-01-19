@@ -8,13 +8,9 @@ POSTS_PER_PAGE: int = 10
 
 
 def index(request):
-    title = ''
     posts = Post.objects.all()[:POSTS_PER_PAGE]
     # В словаре context отправляем информацию в шаблон
-    context = {
-        'posts': posts,
-        'title': title,
-    }
+    context = {'posts': posts, }
     return render(request, 'posts/index.html', context)
 
 
@@ -27,11 +23,6 @@ def group_posts(request, slug):
     # Метод .filter позволяет ограничить поиск по критериям.
     # Это аналог добавления
     # условия WHERE group_id = {group_id}
-    title = ''
     posts = Post.objects.filter(group=group)[:POSTS_PER_PAGE]
-    context = {
-        'group': group,
-        'posts': posts,
-        'title': title,
-    }
+    context = {'group': group, 'posts': posts, }
     return render(request, 'posts/group_list.html', context)
