@@ -34,7 +34,9 @@ class Post(models.Model):
     # то будут удалены все связанные с ним посты.
     group = models.ForeignKey(
         Group,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True
     )
+    class Meta:
+        ordering = ('pub_date',)

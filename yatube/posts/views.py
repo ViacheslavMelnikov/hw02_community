@@ -4,9 +4,10 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post, Group
 
 
+POSTS_PER_PAGE: int = 10
 def index(request):
     title = 'Последние обновления на сайте'
-    posts = Post.objects.order_by('-pub_date')[:10]
+    posts = Post.objects.order_by('-pub_date')[:POSTS_PER_PAGE]
     # В словаре context отправляем информацию в шаблон
     context = {
         'posts': posts,
@@ -25,7 +26,7 @@ def group_posts(request, slug):
     # Это аналог добавления
     # условия WHERE group_id = {group_id}
     title = 'Записи сообщества ' + group.title
-    posts = Post.objects.filter(group=group).order_by('-pub_date')[:10]
+    posts = Post.objects.filter(group=group).order_by('-pub_date')[:POSTS_PER_PAGE]
     context = {
         'group': group,
         'posts': posts,
