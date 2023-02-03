@@ -25,4 +25,5 @@ urlpatterns = [
     # Если какой-то URL не обнаружится в приложении users —
     # Django пойдёт искать его в django.contrib.auth
     path('auth/', include('django.contrib.auth.urls')),
+    path('about/', include('about.urls', namespace='about')),
 ]
