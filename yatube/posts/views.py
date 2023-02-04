@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 
 # from django.http import HttpResponse
 # Импортируем модель, чтобы обратиться к ней
-from .models import Post, Group
+from .models import Post, Group, User
 
 
 POSTS_PER_PAGE: int = 10
@@ -67,9 +67,16 @@ def group_posts(request, slug):
     return render(request, 'posts/group_list.html', context)
 
 def profile(request, username):
-    # Здесь код запроса к модели и создание словаря контекста
+    user = get_object_or_404(User, username=username)
+    post_list = Post.objects.filter(author=user)
+    paginator = Paginator(post_list,POSTS_PER_PAGE)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
+        'user': user, 
+        'page_obj': page_obj, 
     }
+
     return render(request, 'posts/profile.html', context)
 
 
