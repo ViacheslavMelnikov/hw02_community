@@ -68,9 +68,9 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    post_count=author.posts.all().count()
     posts=Post.objects.filter(author_id=author)
-    paginator = Paginator(author.posts.all(), POSTS_PER_PAGE)
+    post_count=posts.count()
+    paginator = Paginator(posts, POSTS_PER_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -87,6 +87,10 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     # Здесь код запроса к модели и создание словаря контекста
+    post = get_object_or_404(Post, pk=post_id)
+    post_count=Post.objects.filter(author_id=post.author.pk).count()
     context = {
+        'post':post,
+        'post_count':post_count,
     }
     return render(request, 'posts/post_detail.html', context)

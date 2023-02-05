@@ -12,16 +12,22 @@
             Автор: {{ post.author.get_full_name }}
           </li>
           <li>
+            <a href="{% url 'posts:profile' post.author.username %}">все посты пользователя</a>
+          </li>
+          <li>
             Дата публикации: {{ post.pub_date|date:"d E Y" }}
           </li>
         </ul>
-        <p>{{ post.text }}</p>    
-        {% if post.group %}   
-          <!--  все записи группы -->
-          <a href="{% url 'posts:group_list' post.group.slug %}">
-            {{ post.group }}
-          </a> 
-        {% endif %}
+        <p>{{ post.text }}</p>
+        <a href="{% url 'posts:post_detail' post.pk %}">подробная информация </a>
+        <li>
+          {% if post.group %}   
+            <!--  все записи группы -->
+            <a href="{% url 'posts:group_list' post.group.slug %}">
+              {{ post.group }}
+            </a> 
+          {% endif %}
+        </ul>
         {% if not forloop.last %}<hr>{% endif %}
       {% endfor %}
       <!-- под последним постом нет линии -->
