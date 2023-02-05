@@ -67,14 +67,19 @@ def group_posts(request, slug):
     return render(request, 'posts/group_list.html', context)
 
 def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    post_list = Post.objects.filter(author=user)
-    paginator = Paginator(post_list,POSTS_PER_PAGE)
+    author = get_object_or_404(User, username=username)
+    post_count=author.posts.all().count()
+    posts=Post.objects.filter(author_id=author)
+    paginator = Paginator(author.posts.all(), POSTS_PER_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-        'user': user, 
+        'author': author, 
+        'paginator': paginator,
+        'page_number': page_number,
         'page_obj': page_obj, 
+        'post_count':post_count,
+        'posts':posts,
     }
 
     return render(request, 'posts/profile.html', context)
