@@ -35,6 +35,12 @@
       <p>
         {{ post.text }}
       </p>
+      {% if post.author.pk == request.user.pk %}
+        <a href="{% url 'posts:post_edit' post.id %}">
+        <button type="submit" class="btn btn-primary">
+          Редактировать
+        </button>
+      {% endif %}
     </article>
   </div> 
 </main>

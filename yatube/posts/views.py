@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 # from django.http import HttpResponse
 # Импортируем модель, чтобы обратиться к ней
-from .models import Post, Group, User
+from .models import Post, Group, User, PostForm
 
 
 POSTS_PER_PAGE: int = 10
@@ -34,7 +34,7 @@ def index(request):
     # context = {'posts': posts, }
     return render(request, 'posts/index.html', context)
 
-
+@login_required
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     post_list = Post.objects.filter(group=group)
@@ -66,6 +66,7 @@ def group_posts(request, slug):
     # context = {'group': group, 'posts': posts, }
     return render(request, 'posts/group_list.html', context)
 
+@login_required
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     posts=Post.objects.filter(author_id=author)
@@ -84,13 +85,58 @@ def profile(request, username):
 
     return render(request, 'posts/profile.html', context)
 
-
+@login_required
 def post_detail(request, post_id):
     # Здесь код запроса к модели и создание словаря контекста
     post = get_object_or_404(Post, pk=post_id)
     post_count=Post.objects.filter(author_id=post.author.pk).count()
     context = {
         'post':post,
-        'post_count':post_count,
+        'post_count':post_count
     }
     return render(request, 'posts/post_detail.html', context)
+
+@login_required
+def post_create(request):
+    is_edit=False
+    error_message=''
+    if request.method=='POST':
+        form=PostForm(request.POST)
+        if form.is_valid():
+            p_form=form.save(commit=False)
+            p_form.author=request.user
+            p_form.save()
+            return redirect('posts:profile',request.user.username)
+        else:
+            error_message='Ошибка заполнения нового поста! Внимательно!'
+    
+    form=PostForm()
+    data={
+        'form':form,
+        'error_message':error_message,
+        'is_edit':is_edit
+        }
+    return render(request,'posts/post_create.html',data)
+
+@login_required
+def post_edit(request, post_id):
+    error_message=""
+    is_edit=True
+    post = get_object_or_404(Post, pk=post_id)
+    form=PostForm(instance=post)
+    if request.method=='POST':
+        if form.is_valid():
+            p_form=form.save(commit=False)
+            p_form.author=request.user
+            p_form.pk=post_id
+            p_form.save()
+            return redirect('posts:post_detail',post_id)
+        else:
+            error_message='Ошибка редактирования поста! Внимательно!'
+    
+    data={
+        'form':form,
+        'error_message':error_message,
+        'is_edit':is_edit
+        }
+    return render(request,'posts/post_create.html',data)
