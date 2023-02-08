@@ -15,5 +15,5 @@ urlpatterns = [
     # Создание новой записи
     path('create/', views.post_create, name='post_create'),
     # Редактирование записи
-    path('<int:post_id>/edit/', views.post_detail, name='post_edit'),
+    path('<int:post_id>/edit/', views.post_edit, name='post_edit'),
 ]

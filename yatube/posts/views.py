@@ -99,44 +99,56 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     is_edit=False
-    error_message=''
+    is_title="Добавить запись"
+    is_but_txt="Добавить"
+    form=PostForm()
+    groups=Group.objects.all()
     if request.method=='POST':
         form=PostForm(request.POST)
         if form.is_valid():
-            p_form=form.save(commit=False)
-            p_form.author=request.user
-            p_form.save()
+            post=form.save(commit=False)
+            post.author=request.user
+            post.save()
             return redirect('posts:profile',request.user.username)
-        else:
-            error_message='Ошибка заполнения нового поста! Внимательно!'
-    
-    form=PostForm()
+        data={
+        'form':form,
+        'groups':groups,
+        'is_edit':is_edit,
+        'is_title':is_title,
+        'is_but_txt':is_but_txt
+        }
+        return render(request,'posts/post_create.html', data)
+
     data={
         'form':form,
-        'error_message':error_message,
-        'is_edit':is_edit
+        'groups':groups,
+        'is_edit':is_edit,
+        'is_title':is_title,
+        'is_but_txt':is_but_txt
         }
     return render(request,'posts/post_create.html',data)
 
 @login_required
 def post_edit(request, post_id):
-    error_message=""
     is_edit=True
+    is_title="Редактировать запись"
+    is_but_txt="Сохранить"
     post = get_object_or_404(Post, pk=post_id)
-    form=PostForm(instance=post)
-    if request.method=='POST':
-        if form.is_valid():
-            p_form=form.save(commit=False)
-            p_form.author=request.user
-            p_form.pk=post_id
-            p_form.save()
-            return redirect('posts:post_detail',post_id)
-        else:
-            error_message='Ошибка редактирования поста! Внимательно!'
+    author=post.author
+    groups=Group.objects.all()
+    form=PostForm(request.POST,instance=post)
+    if request.user == author:
+        if request.method=='POST' and form.is_valid():
+            post=form.save()
+            return redirect('posts:post_detail', post_id)
     
-    data={
-        'form':form,
-        'error_message':error_message,
-        'is_edit':is_edit
-        }
-    return render(request,'posts/post_create.html',data)
+        is_edit=True
+        context={'form':form,
+            'groups':groups,
+            'post':post,
+            'is_edit':is_edit,
+            'is_title':is_title,
+            'is_but_txt':is_but_txt,
+            }
+        return render(request,'posts/post_create.html', context )
+    return redirect('posts:post_detail', post_id)

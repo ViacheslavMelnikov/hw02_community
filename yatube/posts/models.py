@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Select
+from django.forms import ModelForm, Select, Textarea
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -53,6 +53,8 @@ class PostForm(ModelForm):
     class Meta:
         model=Post
         fields=['text','group']
-        widgets={"group": Select(attrs={'class':'form-control','id':'id_group', })}
+        widgets={
+            "group": Select(attrs={'class':'form-control','id':'id_group', })
+            }
         exclude=['author']
 
