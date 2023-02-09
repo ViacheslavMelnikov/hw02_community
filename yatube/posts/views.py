@@ -9,7 +9,6 @@ from .forms import PostForm
 from .constants import POSTS_PER_PAGE
 
 
-@login_required
 def index(request):
     # post_list = Post.objects.all().order_by('-pub_date')
     # Если порядок сортировки определен в классе Meta модели,
@@ -34,7 +33,6 @@ def index(request):
     # context = {'posts': posts, }
     return render(request, 'posts/index.html', context)
 
-@login_required
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     post_list = Post.objects.filter(group=group)
@@ -66,7 +64,6 @@ def group_posts(request, slug):
     # context = {'group': group, 'posts': posts, }
     return render(request, 'posts/group_list.html', context)
 
-@login_required
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     posts=Post.objects.filter(author_id=author)
@@ -85,7 +82,6 @@ def profile(request, username):
 
     return render(request, 'posts/profile.html', context)
 
-@login_required
 def post_detail(request, post_id):
     # Здесь код запроса к модели и создание словаря контекста
     post = get_object_or_404(Post, pk=post_id)
@@ -96,7 +92,6 @@ def post_detail(request, post_id):
     }
     return render(request, 'posts/post_detail.html', context)
 
-@login_required
 def post_create(request):
     is_edit=False
     is_title="Добавить запись"
@@ -128,7 +123,6 @@ def post_create(request):
         }
     return render(request,'posts/post_create.html',data)
 
-@login_required
 def post_edit(request, post_id):
     is_edit=True
     is_title="Редактировать запись"

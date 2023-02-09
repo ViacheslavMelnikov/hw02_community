@@ -6,10 +6,8 @@
 <main>
   <!-- класс py-5 создает отступы сверху и снизу блока -->
   <div class="container py-5">
-    <h1>Записи сообщества</h1>
-    <p>
-      {{ group }}.
-    </p>
+    <h1>{{ group.title }}</h1>
+    <h3>{{ group.description|linebreaks }}</h3>
     {% for post in page_obj %}
       <ul>
         <li>
