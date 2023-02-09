@@ -49,12 +49,4 @@ class Post(models.Model):
     class Meta:
         ordering = ('-pub_date',)
     
-class PostForm(ModelForm):
-    class Meta:
-        model=Post
-        fields=['text','group']
-        widgets={
-            "group": Select(attrs={'class':'form-control','id':'id_group', })
-            }
-        exclude=['author']
 

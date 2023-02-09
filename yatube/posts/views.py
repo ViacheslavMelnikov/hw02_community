@@ -4,10 +4,10 @@ from django.core.paginator import Paginator
 
 # from django.http import HttpResponse
 # Импортируем модель, чтобы обратиться к ней
-from .models import Post, Group, User, PostForm
+from .models import Post, Group, User
+from .forms import PostForm
+from .constants import POSTS_PER_PAGE
 
-
-POSTS_PER_PAGE: int = 10
 
 @login_required
 def index(request):

@@ -35,9 +35,7 @@
                   Группа
                 </label>
                 <select name="group" class="form-control" id="id_group">
-                  {% if not is_edit %}   
-                    <option value="" selected>--------</option> 
-                  {% endif %}
+                  <option value="" selected>--------</option> 
                   {% for group in groups %}
                     {% ifequal group.pk post.group_id %}
                       <option value={{group.pk}} selected>{{group.title}}</option>
